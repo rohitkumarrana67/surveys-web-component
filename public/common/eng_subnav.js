@@ -33,7 +33,6 @@ class EngSubnav extends HTMLElement{
 
   changeActiveItem(e) {
     target = $(e.currentTarget);
-    debugger
     $(this).find('li.active').removeClass('active');
     target.addClass('active');
   }
