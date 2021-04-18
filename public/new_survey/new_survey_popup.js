@@ -7,25 +7,17 @@ class NewSurveyPopup extends HTMLElement{
   }
 
   connectedCallback(){
-    if(!this.template){
-      fetch("http://localhost:4002/survey/new_survey_popup").then(response => {
-        return response.text();
-      }).then(response => {
-        this.template = response
-        this.innerHTML = this.template;
-        $(this).find('.modal').modal('show')
-        $(this).find('.save').on('click', this.createSurvey.bind(this))
-        $(window).on('hidden.bs.modal',()=>{
-          $(this).remove()
-        })
-      })
-    } else {
+    fetch("http://localhost:4002/survey/new_survey_popup").then(response => {
+      return response.text();
+    }).then(response => {
+      this.template = response
       this.innerHTML = this.template;
       $(this).find('.modal').modal('show')
+      $(this).find('.save').on('click', this.createSurvey.bind(this))
       $(window).on('hidden.bs.modal',()=>{
         $(this).remove()
       })
-    }
+    })
   }
 
   validateFields(){
@@ -42,9 +34,9 @@ class NewSurveyPopup extends HTMLElement{
       this.dataJSON['description'] = $(this).find('textarea.description').val();
       window.survey_data = this.dataJSON;
       window.survey_data["id"] = 1;
-      window.location.assign("#survey/1")
-      // $('survey-el').trigger('renderSurveyDetails')
+      $('eng-subnav').trigger('clear_active_item')
       $(this).find('.modal').modal('hide')
+      window.location.assign("#survey/1")
     }
   }
 

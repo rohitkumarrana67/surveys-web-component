@@ -18,15 +18,23 @@ class SurveyOverview extends HTMLElement {
   }
 
   renderAssignedSurveyContainer(){
-    $.getScript('http://localhost:4001/overview/assigned_container.js', ()=>{
+    if(!window.customElements.get('assigned-container')){
+      $.getScript('http://localhost:4001/overview/assigned_container.js', ()=>{
+        $(this).find('#assigned-surveys').html('<assigned-container></assigned-container>')
+      })
+    } else {
       $(this).find('#assigned-surveys').html('<assigned-container></assigned-container>')
-    })
+    }
   }
 
   renderRecentSurveyContainer(){
-    $.getScript('http://localhost:4001/overview/recent_container.js', ()=>{
+    if(!window.customElements.get('recent-container')){
+      $.getScript('http://localhost:4001/overview/recent_container.js', ()=>{
+        $(this).find('#recent-created-surveys').html('<recent-container></recent-container>')
+      })
+    } else {
       $(this).find('#recent-created-surveys').html('<recent-container></recent-container>')
-    })
+    }
   }
 
   events(){

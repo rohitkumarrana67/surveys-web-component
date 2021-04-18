@@ -16,7 +16,7 @@ class RecentContainer extends HTMLElement{
   }
 
  renderRecentSurveys(){
-  if(!window.customElements.get('new-survey-popup')){
+  if(!window.customElements.get('recent-survey')){
     $.getScript('http://localhost:4001/overview/recent_survey.js', ()=>{
       for (let i=0;i<5;i++){
         $(this).find('#recent-list-container').append('<recent-survey class="col-md-4 mb-20"></recent-survey>')

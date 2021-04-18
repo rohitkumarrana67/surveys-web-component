@@ -29,12 +29,17 @@ class EngSubnav extends HTMLElement{
 
   addEventListeners(){
     $(this).find('li.nav-item').on('click', this.changeActiveItem.bind(this));
+    $(this).on('clear_active_item', this.clearActiveItem.bind(this))
   }
 
   changeActiveItem(e) {
     target = $(e.currentTarget);
-    $(this).find('li.active').removeClass('active');
+    this.clearActiveItem();
     target.addClass('active');
+  }
+
+  clearActiveItem() {
+    $(this).find('li.active').removeClass('active');
   }
 
 }
