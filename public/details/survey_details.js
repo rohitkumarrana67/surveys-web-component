@@ -2,37 +2,38 @@ class SurveyDetails extends HTMLElement{
 
   constructor(){
     super();
-    $(this).css('display', 'block')
-    this.template;
-    this._state
-    this._data = []
+    this.template = `<div>
+                      <div id = "details-top-section"></div>
+                      <div id = "details-main-section"></div>
+                    </div>`;
   }
 
   connectedCallback() {
-    fetch('http://localhost:4002/survey/survey_details').then((response)=>{
-      return response.text();
-    }).then((response)=>{
-      this.template = response;
-      this.innerHTML = this.template;
-      this.dataJSON = window.survey_data
-      $(this).find('.name').text(this.dataJSON.name)
-      if (this.dataJSON.description){
-        $(this).find('.desc').text(this.dataJSON.description)
-      }
-      this.render()
-    });
+    this.innerHTML = this.template;
+    this.renderDetailsTopSection()
+    this.renderDetailsMainSection()
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "state") {
-      this.setstate(newValue);
+  renderDetailsTopSection() {
+    if(!window.customElements.get('details-top')){
+      $.getScript('http://localhost:4001/details/details_top_section.js', ()=>{
+        $(this).find('#details-top-section').html('<details-top></details-top>');
+      })
+    } else {
+      $(this).find('#details-top-section').html('<details-top></details-top>');
     }
   }
 
-  render(){
-    console.log(JSON.parse(this._state))
+  renderDetailsMainSection() {
+    if(!window.customElements.get('details-main')){
+      $.getScript('http://localhost:4001/details/details_main_section.js', ()=>{
+        $(this).find('#details-main-section').html('<details-main></details-main>');
+      })
+    } else {
+      $(this).find('#details-main-section').html('<details-main></details-main>');
+    }
   }
 
 }
 
-customElements.define('survey-details', SurveyEdit);
+customElements.define('survey-details', SurveyDetails);

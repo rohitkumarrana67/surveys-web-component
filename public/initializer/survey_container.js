@@ -72,7 +72,13 @@ class SurveyContainer extends HTMLElement{
   }
 
   renderSurveyDetails() {
-    $(this).find('#survey-main-content').html("This is survey details");
+    if(!window.customElements.get('survey-details')){
+      $.getScript('http://localhost:4001/details/survey_details.js', ()=>{
+        $(this).find('#survey-main-content').html('<survey-details></survey-details>');
+      })
+    } else {
+      $(this).find('#survey-main-content').html('<survey-details></survey-details>');
+    } 
   }
 
   static get observedAttributes() {
