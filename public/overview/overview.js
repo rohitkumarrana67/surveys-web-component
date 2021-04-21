@@ -1,8 +1,15 @@
 class SurveyOverview extends HTMLElement {
 
+  COMPONENTS_URL = {
+    'assigned-container'   : "http://localhost:4001/overview/assigned_container.js",
+    'recent-container'     : "http://localhost:4001/overview/recent_container.js",
+    'new-survey-popup'     : "http://localhost:4001/new_survey/new_survey_popup.js",
+  }
+
   constructor(){
     super()
     this.template;
+    this.web
   }
 
   connectedCallback(){
@@ -18,13 +25,18 @@ class SurveyOverview extends HTMLElement {
   }
 
   renderAssignedSurveyContainer(){
-    if(!window.customElements.get('assigned-container')){
-      $.getScript('http://localhost:4001/overview/assigned_container.js', ()=>{
-        $(this).find('#assigned-surveys').html('<assigned-container></assigned-container>')
-      })
-    } else {
+    this.fetchComponent('assigned-container').then(()=>{
       $(this).find('#assigned-surveys').html('<assigned-container></assigned-container>')
-    }
+    }).catch((e)=>{
+      console.log(e)
+    })
+    // if(!window.customElements.get('assigned-container')){
+    //   $.getScript('http://localhost:4001/overview/assigned_container.js', ()=>{
+    //     $(this).find('#assigned-surveys').html('<assigned-container></assigned-container>')
+    //   })
+    // } else {
+    //   $(this).find('#assigned-surveys').html('<assigned-container></assigned-container>')
+    // }
   }
 
   renderRecentSurveyContainer(){
@@ -49,6 +61,16 @@ class SurveyOverview extends HTMLElement {
     } else {
       $('body').append('<new-survey-popup/>')
     }
+  }
+
+  fetchComponent(urlKey){
+    return new Promise((resolve,reject)=>{
+      if(!window.customElements.get(urlKey)){
+        $.getScript(this.COMPONENTS_URL[urlKey]).done(()=>resolve()).fail(()=>reject())
+      }else{
+        resolve();
+      }
+    })
   }
 
 }
