@@ -1,5 +1,9 @@
 class SurveyDetails extends HTMLElement{
 
+  static get observedAttributes() {
+    return ['type','data-id'];
+  }
+
   constructor(){
     super();
     this.template;
@@ -19,8 +23,24 @@ class SurveyDetails extends HTMLElement{
       this.template = response;
       this.innerHTML = this.template;
       this.renderDetailsTopSection();
-      this.renderDetailsMainSection();
+      this.renderDetails();
     });
+  }
+
+  renderDetails() {
+    switch(this.type){
+      case 'questionnare':
+        this.renderDetailsMainSection();
+        break;
+      case 'respondents':
+        this.renderRespondents();
+        break;
+      case 'responses':
+        this.renderResponses();
+        break;
+      default:
+        break;
+    }
   }
 
   renderDetailsTopSection() {
@@ -40,6 +60,24 @@ class SurveyDetails extends HTMLElement{
       })
     } else {
       $(this).find('#details-main-section').html('<details-main></details-main>');
+    }
+  }
+
+  renderRespondents() {
+    $(this).find('#details-main-section').html('This is respondants sub section.')
+  }
+
+  renderResponses() {
+    $(this).find('#details-main-section').html('This is responses page.')
+  }
+
+  attributeChangedCallback(attr, oldValue, newValue) {
+    if(attr == 'type' && oldValue !== newValue){
+      this.type = newValue;
+      this.renderDetails();
+    }
+    if(attr == 'data-id' && oldValue !== newValue){
+      this.survey_id = newValue;
     }
   }
 
