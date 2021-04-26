@@ -1,5 +1,9 @@
 class EngSubnav extends HTMLElement{
 
+  static get observedAttributes() {
+    return ['activeitem'];
+  }
+
   constructor(){
     super();
     this.template = `<nav class='nav nav-subtabs navbar-expand'>
@@ -8,11 +12,13 @@ class EngSubnav extends HTMLElement{
                      </nav>`
     this._navItems;
     this._activeItem;
+    this._baseURL;
   }
 
   connectedCallback(){
     this._navItems = this.getAttribute('navItems');
     this._activeItem = this.getAttribute('activeItem') || 'overview';
+    this._baseURL = this.getAttribute('base-url') || '';
     this.innerHTML = this.template;
     this.populateNavItems();
     this.addEventListeners();
@@ -22,7 +28,10 @@ class EngSubnav extends HTMLElement{
     let nav_items = this._navItems.split(',');
     for(let item of nav_items){
       item = item.trim();
-      $(this).find('ul').append(`<li class="nav-item ${item.replace(' ', '_').toLowerCase()}"><a class="nav-link" href="${window.location.pathname}#${item.replace(' ', '_').toLowerCase()}">${item}</a></li>`);
+      let item_name = item.replace(' ', '_').toLowerCase();
+      $(this).find('ul').append(`<li class="nav-item ${item_name}" value="${item_name}">
+                                  <a class="nav-link" href="${window.location.pathname}#${this._baseURL}${item_name}">${item}</a>
+                                </li>`);
     }
     $(this).find(`.${this._activeItem}`).addClass('active');
   }
@@ -33,13 +42,22 @@ class EngSubnav extends HTMLElement{
   }
 
   changeActiveItem(e) {
-    let target = $(e.currentTarget);
+    let target_val = e.currentTarget.getAttribute('value');
     this.clearActiveItem();
-    target.addClass('active');
+    $(`.${target_val}`).addClass('active');
+    $(this).attr('activeItem', target_val);
   }
 
   clearActiveItem() {
     $(this).find('li.active').removeClass('active');
+  }
+
+  attributeChangedCallback(attr, oldValue, newValue) {
+    if(attr == 'activeitem' && oldValue !== newValue) {
+      if($(this).find(`.${newValue}`).length == 0) {
+        this.clearActiveItem();
+      }
+    }
   }
 
 }

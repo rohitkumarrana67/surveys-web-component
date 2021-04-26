@@ -1,7 +1,7 @@
 class NewSurveyPopup extends HTMLElement{
 
   constructor(){
-    super()
+    super();
     this.template;
     this.dataJSON = {};
   }
@@ -34,9 +34,8 @@ class NewSurveyPopup extends HTMLElement{
       this.dataJSON['description'] = $(this).find('textarea.description').val();
       window.survey_data = this.dataJSON;
       window.survey_data["id"] = 1;
-      $('eng-subnav').trigger('clear_active_item')
       $(this).find('.modal').modal('hide')
-      window.location.assign("#survey/1")
+      window.location.assign("/pages/my_corner/surveys#survey/1/questionnare")
     }
   }
 

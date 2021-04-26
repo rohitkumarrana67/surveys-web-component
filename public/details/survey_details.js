@@ -2,16 +2,25 @@ class SurveyDetails extends HTMLElement{
 
   constructor(){
     super();
-    this.template = `<div>
-                      <div id = "details-top-section"></div>
-                      <div id = "details-main-section"></div>
-                    </div>`;
+    this.template;
+    this.type;
+    this.survey_id;
+    if(!window.customElements.get("eng_subnav")){
+      $.getScript('http://localhost:4001/common/eng_subnav.js', ()=>{})
+    }
   }
 
   connectedCallback() {
-    this.innerHTML = this.template;
-    this.renderDetailsTopSection()
-    this.renderDetailsMainSection()
+    this.type = this.getAttribute('type');
+    this.survey_id = this.getAttribute('data-id');
+    fetch(`http://localhost:4002/survey/survey_details?type=${this.type}&survey_id=${this.survey_id}`).then((response)=>{
+      return response.text();
+    }).then((response)=>{
+      this.template = response;
+      this.innerHTML = this.template;
+      this.renderDetailsTopSection();
+      this.renderDetailsMainSection();
+    });
   }
 
   renderDetailsTopSection() {

@@ -1,8 +1,8 @@
 class DetailsMainSection extends HTMLElement {
 
   constructor() {
-    super()
-    this.template
+    super();
+    this.template;
   }
 
   connectedCallback() {
@@ -15,4 +15,4 @@ class DetailsMainSection extends HTMLElement {
   }
 }
 
-customElements.define('details-main', DetailsMainSection)
+customElements.define('details-main', DetailsMainSection);

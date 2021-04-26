@@ -7,7 +7,7 @@ class SurveyOverview extends HTMLElement {
   }
 
   constructor(){
-    super()
+    super();
     this.template;
     this.web
   }

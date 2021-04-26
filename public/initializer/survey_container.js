@@ -1,5 +1,9 @@
 class SurveyContainer extends HTMLElement{
 
+  static get observedAttributes() {
+    return ['type','data-id'];
+  }
+
   constructor(){
     super();
     this.template;
@@ -38,7 +42,8 @@ class SurveyContainer extends HTMLElement{
         this.renderReports();
         break;
       case 'details':
-        this.renderSurveyDetails();
+        let type = window.location.hash.split('/')[2]
+        this.renderSurveyDetails(type);
         break;
       default:
         break;
@@ -71,24 +76,23 @@ class SurveyContainer extends HTMLElement{
     $(this).find('#survey-main-content').html("This is reports");
   }
 
-  renderSurveyDetails() {
+  renderSurveyDetails(type) {
     if(!window.customElements.get('survey-details')){
       $.getScript('http://localhost:4001/details/survey_details.js', ()=>{
-        $(this).find('#survey-main-content').html('<survey-details></survey-details>');
+        $(this).find('#survey-main-content').html(`<survey-details type="${type}" data-id=${this.survey_id}></survey-details>`);
       })
     } else {
-      $(this).find('#survey-main-content').html('<survey-details></survey-details>');
+      $(this).find('#survey-main-content').html(`<survey-details type="${type}" data-id=${this.survey_id}></survey-details>`);
     } 
-  }
-
-  static get observedAttributes() {
-    return ['type'];
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
     if(attr == 'type' && oldValue !== newValue){
       this.type = newValue;
       this.render();
+    }
+    if(attr == 'data-id' && oldValue !== newValue){
+      this.survey_id = newValue;
     }
   }
 }

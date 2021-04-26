@@ -1,8 +1,8 @@
 class DetailsTopSection extends HTMLElement {
 
   constructor() {
-    super()
-    this.template
+    super();
+    this.template;
   }
 
   connectedCallback() {
