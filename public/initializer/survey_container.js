@@ -1,5 +1,10 @@
 class SurveyContainer extends HTMLElement{
 
+  COMPONENTS_URL = {
+    'survey-overview'      : "http://localhost:4001/overview/overview.js",
+    'all-surveys-container': "http://localhost:4001/all_surveys/all_surveys_container.js"
+  }
+
   static get observedAttributes() {
     return ['type','data-id'];
   }
@@ -51,13 +56,11 @@ class SurveyContainer extends HTMLElement{
   }
 
   renderOverview(){
-    if(!window.customElements.get('survey-overview')){
-      $.getScript('http://localhost:4001/overview/overview.js', ()=>{
-        $(this).find('#survey-main-content').html('<survey-overview></survey-overview>')
-      })
-    } else {
+    this.fetchComponent('survey-overview').then(()=>{
       $(this).find('#survey-main-content').html('<survey-overview></survey-overview>')
-    }
+    }).catch((e)=>{
+      console.log(e)
+    })
   }
 
   renderDashboard() {
@@ -65,7 +68,11 @@ class SurveyContainer extends HTMLElement{
   }
 
   renderAllSurveys() {
-    $(this).find('#survey-main-content').html("This is all surveys");
+    this.fetchComponent('all-surveys-container').then(()=>{
+      $(this).find('#survey-main-content').html('<all-surveys-container></all-surveys-container>')
+    }).catch((e)=>{
+      console.log(e)
+    })
   }
 
   renderTemplateLibrary() {
@@ -83,7 +90,7 @@ class SurveyContainer extends HTMLElement{
       })
     } else {
       $(this).find('#survey-main-content').html(`<survey-details type="${type}" data-id=${this.survey_id}></survey-details>`);
-    } 
+    }
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
@@ -95,6 +102,17 @@ class SurveyContainer extends HTMLElement{
       this.survey_id = newValue;
     }
   }
+
+  fetchComponent(urlKey){
+    return new Promise((resolve,reject)=>{
+      if(!window.customElements.get(urlKey)){
+        $.getScript(this.COMPONENTS_URL[urlKey]).done(()=>resolve()).fail(()=>reject())
+      }else{
+        resolve();
+      }
+    })
+  }
+
 }
 
 customElements.define('survey-container', SurveyContainer);

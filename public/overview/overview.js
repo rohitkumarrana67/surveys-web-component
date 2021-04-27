@@ -9,7 +9,6 @@ class SurveyOverview extends HTMLElement {
   constructor(){
     super();
     this.template;
-    this.web
   }
 
   connectedCallback(){
@@ -24,43 +23,32 @@ class SurveyOverview extends HTMLElement {
     })
   }
 
+  events(){
+    this.querySelector('#create-survey').addEventListener('click', this.openNewSurveyModal.bind(this))
+  }
+
   renderAssignedSurveyContainer(){
     this.fetchComponent('assigned-container').then(()=>{
       $(this).find('#assigned-surveys').html('<assigned-container></assigned-container>')
     }).catch((e)=>{
       console.log(e)
     })
-    // if(!window.customElements.get('assigned-container')){
-    //   $.getScript('http://localhost:4001/overview/assigned_container.js', ()=>{
-    //     $(this).find('#assigned-surveys').html('<assigned-container></assigned-container>')
-    //   })
-    // } else {
-    //   $(this).find('#assigned-surveys').html('<assigned-container></assigned-container>')
-    // }
   }
 
   renderRecentSurveyContainer(){
-    if(!window.customElements.get('recent-container')){
-      $.getScript('http://localhost:4001/overview/recent_container.js', ()=>{
-        $(this).find('#recent-created-surveys').html('<recent-container></recent-container>')
-      })
-    } else {
+    this.fetchComponent('recent-container').then(()=>{
       $(this).find('#recent-created-surveys').html('<recent-container></recent-container>')
-    }
-  }
-
-  events(){
-    this.querySelector('#create-survey').addEventListener('click', this.openNewSurveyModal.bind(this))
+    }).catch((e)=>{
+      console.log(e)
+    })
   }
 
   openNewSurveyModal(){
-    if(!window.customElements.get('new-survey-popup')){
-      $.getScript('http://localhost:4001/new_survey/new_survey_popup.js', ()=>{
-        $('body').append('<new-survey-popup />')
-      })
-    } else {
-      $('body').append('<new-survey-popup/>')
-    }
+    this.fetchComponent('new-survey-popup').then(()=>{
+      $('body').append('<new-survey-popup />')
+    }).catch((e)=>{
+      console.log(e)
+    })
   }
 
   fetchComponent(urlKey){
